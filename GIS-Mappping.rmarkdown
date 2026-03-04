@@ -1,0 +1,55 @@
+---
+title: "GIS Mapping Project"
+format: html
+editor: visual
+---
+
+## GIS Map in Quatro
+Download all required packages
+```{r}
+library(sf)
+library(rinat)
+library(ggplot2)
+library(viridis)
+```
+Create a data set with the Cape Parrot Observation in South Africa
+```{r}
+cp <- get_inat_obs(
+  taxon_name = "Poicephalus robustus",
+  place_id = 6986,   # South Africa ID
+  quality = "research", #Quality certified observations
+  maxresults = 5000
+)
+```
+Pull the vegetation map for Southern Africa from the shapefile
+```{r}
+veg <- st_read("VEGMAP2018_AEA_07012019_beta.Shapefile", quiet = TRUE)
+```
+Match the dataframes using sf
+```{r}
+cpsf <- st_as_sf(cp, coords = c("longitude", "latitude"), crs = 4326) #lon/lat changed to sf
+
+cpsfproj <- st_transform(cpsf, st_crs(veg)) #transform for veg 
+```
+Crop the veg map to fit the area surrounding the parrot sitings
+```{r}
+parrotbox <- st_bbox(cpsfproj) #Make a box area around the sitings
+
+parrotbuffer <- st_buffer(st_as_sfc(parrotbox), 50000) #Create the buffer around the box
+
+vegcrop <- st_crop(veg, parrotbuffer) #Crop the veg map
+
+vegcrop <- vegcrop[!is.na(vegcrop$BIOME_18), ] #attempt to get rid of null (unsuccessful)
+
+vegcrop$BIOME_18 <- droplevels(as.factor(vegcrop$BIOME_18)) #keep biomes as a factor
+```
+Plot the Cape Parrot Sitings against biome
+```{r}
+ggplot() +
+  geom_sf(data = vegcrop, aes(fill = BIOME_18), color = NA) +
+  geom_sf(data = cpsfproj, color = "red", size = 0.5) + 
+  scale_fill_viridis_d(name = "Biome") +
+  labs( title = "Cape Parrot Sightings by Biome",) +
+  theme_minimal() +
+  theme(legend.position = "right")#Still a null value but it's there on purpose
+```
