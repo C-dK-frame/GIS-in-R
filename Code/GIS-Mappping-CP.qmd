@@ -5,14 +5,20 @@ editor: visual
 ---
 
 ## GIS Map in Quatro
+
 Load all required packages
+
 ```{r}
+getwd()
+list.files()
 library(sf)
 library(rinat)
 library(ggplot2)
 library(viridis)
 ```
+
 Create a data set with the Cape Parrot Observation in South Africa
+
 ```{r}
 cp <- get_inat_obs(
   taxon_name = "Poicephalus robustus",
@@ -21,17 +27,23 @@ cp <- get_inat_obs(
   maxresults = 5000
 )
 ```
+
 Pull the vegetation map for Southern Africa from the shapefile
+
 ```{r}
-veg <- st_read("VEGMAP2018_AEA_07012019_beta.Shapefile", quiet = TRUE)
+veg <- st_read("VEGMAP2018_AEA_07012019_beta.Shapefile/VEGMAP2018_AEA_07012019_beta.shp")
 ```
+
 Match the dataframes using sf
+
 ```{r}
 cpsf <- st_as_sf(cp, coords = c("longitude", "latitude"), crs = 4326) #lon/lat changed to sf
 
 cpsfproj <- st_transform(cpsf, st_crs(veg)) #transform for veg 
 ```
+
 Crop the veg map to fit the area surrounding the parrot sitings
+
 ```{r}
 parrotbox <- st_bbox(cpsfproj) #Make a box area around the sitings
 
@@ -43,7 +55,9 @@ vegcrop <- vegcrop[!is.na(vegcrop$BIOME_18), ] #attempt to get rid of null (unsu
 
 vegcrop$BIOME_18 <- droplevels(as.factor(vegcrop$BIOME_18)) #keep biomes as a factor
 ```
+
 Plot the Cape Parrot Sitings against biome
+
 ```{r}
 ggplot() +
   geom_sf(data = vegcrop, aes(fill = BIOME_18), color = NA) +
