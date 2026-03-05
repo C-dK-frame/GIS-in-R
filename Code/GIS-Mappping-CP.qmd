@@ -23,11 +23,7 @@ cp <- get_inat_obs(
 ```
 Pull the vegetation map for Southern Africa from the shapefile
 ```{r}
-<<<<<<< HEAD
-veg <- st_read("data/vegmap/VEGMAP2018_AEA_07012019_beta.shp")
-=======
-veg <- st_read("VEGMAP2018_AEA_07012019_beta.Shapefile", quiet = TRUE)
->>>>>>> parent of eda3664 (Made a data section)
+veg <- st_read("Data/VEGMAP2018_AEA_07012019_beta.Shapefile", quiet = TRUE)
 ```
 Match the dataframes using sf
 ```{r}
