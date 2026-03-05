@@ -31,7 +31,7 @@ cp <- get_inat_obs(
 Pull the vegetation map for Southern Africa from the shapefile
 
 ```{r}
-veg <- st_read("VEGMAP2018_AEA_07012019_beta.Shapefile/VEGMAP2018_AEA_07012019_beta.shp")
+veg <- st_read("data/vegmap/VEGMAP2018_AEA_07012019_beta.shp")
 ```
 
 Match the dataframes using sf
