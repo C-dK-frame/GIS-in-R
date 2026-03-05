@@ -15,3 +15,6 @@ It is used for the GIS Honours Assignment.
 Cape Parrot observations: iNaturalist (using research-grade records)
 Biome map: South African national vegetation dataset (not included in this repository due to file size)
   Found at SANBI.com, using the 2018 Vegetation Map
+
+
+I have been incredibly sick this week, so I truly apologise if I've left anything out.
